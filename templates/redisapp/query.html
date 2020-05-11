@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查询</title>
+</head>
+<body>
+{% load cache %}
+<h1>所有员工数据展示</h1>
+<table border="1" cellspacing="0">
+    <tr>
+        <th>编号</th>
+        <th>姓名</th>
+        <th>年龄</th>
+        <th>生日</th>
+        <th>工资</th>
+    </tr>
+    {% cache 100 py2002 %}
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.age }}</td>
+                <td>{{ user.birth }}</td>
+                <td>{{ user.salary }}</td>
+            </tr>
+        {% endfor %}
+    {% endcache %}
+</table>
+</body>
+</html>

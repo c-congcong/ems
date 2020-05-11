@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+
+        {% extends 'userapp/regist.html' %}
+
+        {% block content1 %}
+		<title>login</title>
+        {% endblock %}
+        {% load static %}
+	</head>
+
+	<body>
+
+        {% block content2 %}
+
+        <h1>
+            login
+        </h1>
+        <form action="{% url 'userapp:login1' %}" method="post">
+            {% csrf_token %}
+            <table cellpadding="0" cellspacing="0" border="0"
+                class="form_table">
+                <tr>
+                    <td valign="middle" align="right">
+                        username:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="text" class="inputgri" name="name" onblur="check2()" /><span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        password:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="password" class="inputgri" name="pwd" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        7天自动登录
+                    </td>
+                    <td valign="middle" align="left">
+                        <input type="checkbox" name="rem" value="1">
+                    </td>
+                </tr>
+            </table>
+            <p>
+                <input type="submit" class="button"  value="Submit &raquo;" />
+            </p>
+        </form>
+        {% endblock %}
+        {% block content3 %}
+            <script src="/static/js/jquery-1.11.1.min.js" ></script>
+        <script>
+            function check1() {
+                var a = null;
+                if (window.XMLHttpRequest){
+                    a=new XMLHttpRequest();
+                }else if (window.XMLHttpRequest){
+                    a=new ActiveXObject('Microsoft.XMLHTTP');
+                }
+
+                var url = '{% url "userapp:login1" %}';
+                a.open('POST',url);
+
+                a.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+
+                var name = document.getElementsByName('name')[0].value;
+                var pwd = document.getElementsByName('pwd')[0].value;
+                var rem = ''+document.getElementsByName('rem')[0].checked;
+
+                a.send( 'name=' + name + '&pwd='+pwd+'&rem='+rem+'&csrfmiddlewaretoken={{ csrf_token }}');
+
+                a.onreadystatechange = function () {
+                    if (a.readyState === 4 && a.status === 200) {
+                        var res=a.responseText;
+                        if (res==='f') {
+                            alert('用户名或密码不正确!')
+                        }else {
+                            location.href="{% url 'adminapp:sel' %}"
+                        }
+                    }
+                }
+            }
+            function check2() {
+                var a = null;
+                var b=document.getElementsByTagName('span')[0];
+                b.innerHTML='<img src="{% static "img/5-121204193R5-50.gif" %}" style="width :12px">';
+                if (window.XMLHttpRequest){
+                    a=new XMLHttpRequest();
+                }else if (window.XMLHttpRequest){
+                    a=new ActiveXObject('Microsoft.XMLHTTP');
+                }
+
+                var url = '{% url "userapp:checkname" %}';
+                a.open('POST',url);
+
+                a.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+
+                var val = document.getElementsByName('name')[0].value;
+                a.send('name=' + val + '&csrfmiddlewaretoken={{ csrf_token }}');
+
+                a.onreadystatechange = function () {
+                    if (a.readyState === 4 && a.status === 200) {
+                        var res=a.responseText;
+                        var b=document.getElementsByTagName('span')[0];
+                        console.log(res);
+                        console.log(typeof (res));
+                        if (res==='True') {
+                            b.innerHTML = "<img src='{% static "img/right.jpg" %}' style='width:14px' />";
+                        }else {
+                            b.innerHTML = "<img src='{% static "img/error_3.jpg" %}' style='width:14px' />";
+                        }
+                    }
+                }
+            }
+        </script>
+    {% endblock %}
+	</body>
+</html>

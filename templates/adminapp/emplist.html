@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+        {% extends 'userapp/regist.html' %}
+        {% block content1 %}
+		<title>emplist</title>
+        {% endblock %}
+	</head>
+	<body>
+    {% load static %}
+        {% block content2 %}
+            <h1>
+                Welcome!
+            </h1>
+            <table class="table">
+                <tr class="table_header">
+                    <td>
+                        ID
+                    </td>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        Salary
+                    </td>
+                    <td>
+                        Age
+                    </td>
+                    <td>
+                        Pic
+                    </td>
+                    <td>
+                        Operation
+                    </td>
+                </tr>
+                {% for foo in user %}
+                    <tr class='"row" + {{ foo.id }}'>
+                        <td>
+                            {{ foo.id }}
+                        </td>
+                        <td>
+                            {{foo.name}}
+                        </td>
+                        <td>
+                            {{ foo.salary }}
+                        </td>
+                        <td>
+                            {{ foo.age }}
+                        </td>
+                        <td>
+                            <img src="{% static foo.pic.url %}" alt="" width="50px">
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" class="asd"  value="{{ foo.id }}" >delete emp</a>&nbsp;<a href="{% url 'adminapp:upd1' %}?id={{foo.id }}&pg={{ user.number }}">update emp</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+
+                    {% if user.has_previous %}
+                    <a href="{% url 'adminapp:sel' %}?id={{ user.previous_page_number }}">上一页</a>
+                    {% endif %}
+
+                    {% for foo in user.paginator.page_range %}
+                        <a href="{% url 'adminapp:sel' %}?id={{ foo }}">
+                            {% if user.number == foo %}
+                                <span style="background-color:lightskyblue">
+                            {% else %}
+                                <span>
+                            {% endif %}
+                                {{ foo }}</span>
+                        </a>
+                    {% endfor %}
+
+                    {% if user.has_next %}
+                        <a href="{% url 'adminapp:sel' %}?id={{ user.next_page_number }}">下一页</a>
+                    {% endif %}
+
+            <p>
+                <input type="button" class="button" value="Add Employee" onclick="location='{% url "adminapp:add1" %}'"/>
+            </p>
+    {% endblock %}
+{% block content3 %}
+    <script src="/static/js/jquery-1.11.1.min.js" ></script>
+    <script>
+    $('.asd').click(function () {
+        var pg=0;
+        if (window.confirm("是否删除?")){
+            aa=$('.asd').attr('value');
+            {#location.href="{% url 'adminapp:del' %}?id="+a;#}
+            {% if user.start_index == user.end_index %}
+                    pg = {{ user.number }}-1;
+                    location.href = '{% url "adminapp:del" %}?id='+aa+'&pg='+pg;
+                {% else %}
+                    pg = {{ user.number }};
+                    location.href = '{% url "adminapp:del" %}?id='+aa+'&pg='+pg;
+                {% endif %}
+         }
+    });
+
+
+
+    setInterval(countTime,1000);
+    function countTime() {
+        var date1 = new Date();
+
+        var p = document.getElementById('p');
+        p.innerHTML = date1.getFullYear()+'/'+(date1.getMonth()+1)+'/'+date1.getDate()+' '+date1.getHours()+':'+date1.getMinutes()+':'+date1.getSeconds()+' '+'星期'+date1.getDay()
+    }
+
+    </script>
+    {% endblock %}
+	</body>
+</html>
