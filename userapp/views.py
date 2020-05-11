@@ -119,3 +119,9 @@ def login1(request):
             print(123)
         return res
     return HttpResponse('f')
+
+
+# --------------------------------------------
+# 练习
+def asd():
+    return HttpResponse('asd')
